@@ -17,6 +17,6 @@ COPY . /srv/api/
 RUN ls -ltr
 
 RUN npm run build
-EXPOSE 8080
+EXPOSE 8000
 
 CMD [ "sh", "-c", "npm start" ]
