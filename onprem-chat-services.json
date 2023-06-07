@@ -20,7 +20,7 @@
       },
 		"portMappings": [
 		  {
-			"containerPort": 8080,
+			"containerPort": 8000,
 			"hostPort": 8013,
 			"protocol": "tcp"
 		  }
