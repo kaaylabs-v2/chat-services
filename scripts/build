@@ -27,7 +27,6 @@ docker logout
 exit 1
 fi
 }
-
 if [ "$GIT_BRANCH" = "development" ];
 then
 startBuild
