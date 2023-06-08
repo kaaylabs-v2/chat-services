@@ -1,6 +1,7 @@
 import { Router, Request, Response } from 'express';
 import { ConversationModel } from '../models/conversation';
 import { Server as SocketIOServer } from 'socket.io';
+import { randomUUID } from 'crypto';
 
 const router: Router = Router();
 
@@ -22,6 +23,7 @@ const conversationRoutes = (io: SocketIOServer) => {
 
         // Emit event to all participants in the conversation
         participants.forEach((participant: string) => {
+          console.log('hi0----', participant);
           io.to(participant).emit('conversationCreated', savedConversation);
         });
 

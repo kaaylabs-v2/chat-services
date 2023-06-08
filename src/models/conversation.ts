@@ -8,7 +8,7 @@ export interface Conversation extends Document {
 }
 
 const ConversationSchema = new Schema<Conversation>({
-  name: { type: String, required: true },
+  name: { type: String },
   participants: { type: [String], required: true },
   createdAt: { type: Date, required: true },
   updatedAt: { type: Date, required: true },

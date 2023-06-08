@@ -14,8 +14,8 @@ const MessageSchema = new Schema<Message>({
   senderId: { type: String, required: true },
   content: { type: String, required: true },
   timestamp: { type: Date, required: true },
-  readBy: { type: [String], required: true },
-  attachmentUrl: { type: String, required: true },
+  readBy: { type: [String], required: false },
+  attachmentUrl: { type: String, required: false },
 });
 
 export const MessageModel = model<Message>('Message', MessageSchema);

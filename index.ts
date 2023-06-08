@@ -2,20 +2,26 @@ import express, { Application, Request, Response, NextFunction } from 'express';
 import bodyParser from 'body-parser';
 import { Server as SocketIOServer, Socket } from 'socket.io';
 import http from 'http';
+import cors from 'cors';
 import { connect, close } from './src/db';
 import conversationRoutes from './src/routes/conversationRoutes';
 import messageRoutes from './src/routes/messageRoutes';
 import userRoutes from './src/routes/userRoutes';
-const app: Application = express();
-const port = 3000;
+const net = require("net");
 
+const app: Application = express();
+const port = 8000;
+
+if (net.setDefaultAutoSelectFamily) {
+  net.setDefaultAutoSelectFamily(false);
+}
 // Middleware
 app.use(bodyParser.json());
-
+app.use(cors());
 // Create HTTP server
 const server = http.createServer(app);
 // Data structure to track online status
-const onlineUsers: Map<string, boolean> = new Map();
+const onlineUsers:any = [];
 // Connect to MongoDB
 connect((err: Error | null) => {
   if (err) {
@@ -24,26 +30,34 @@ connect((err: Error | null) => {
   }
 
   // Create Socket.IO server
-  const io = new SocketIOServer(server);
-
+  const io = require("socket.io")(server, {
+    cors: {
+      methods: ["GET", "POST"],
+      allowedHeaders: ["my-custom-header"],
+      credentials: true
+    }
+  });
   // Set up WebSocket connection
   io.on('connection', (socket: Socket) => {
     console.log('New socket connection:', socket.id);
       // Handle user login
-  socket.on('login', (userId: string) => {
-    onlineUsers.set(userId, true);
+  socket.on('login', ({ userId }) => {
     console.log(`User ${userId} is online`);
+    onlineUsers.push(userId);
+    socket.join(userId);
   });
 
   // Handle user logout or disconnect
   socket.on('logout', (userId: string) => {
-    onlineUsers.delete(userId);
+    const deleteIndex = onlineUsers.indexOf(userId);
+    if (deleteIndex > -1) {
+      onlineUsers.splice(deleteIndex, 1);
+    }
     console.log(`User ${userId} is offline`);
   });
 
     // Join a conversation room
     socket.on('joinRoom', (conversationId: string) => {
-      socket.join(conversationId);
       console.log(`Socket ${socket.id} joined room ${conversationId}`);
     });
 
@@ -56,7 +70,6 @@ connect((err: Error | null) => {
   // Set up routes
   app.use('/api/conversations', conversationRoutes(io));
   app.use('/api/messages', messageRoutes(io));
-  // Endpoint to check user's online status
   app.use('/api/users', userRoutes(onlineUsers));
   // Start the server
   server.listen(port, () => {
