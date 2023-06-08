@@ -1,0 +1,33 @@
+{
+	"requiresCompatibilities": [
+	  "EXTERNAL"
+	],
+	"containerDefinitions": [
+	  {
+		"name": "chat-services",
+		"image": "634677623658.dkr.ecr.us-east-1.amazonaws.com/chat-services:GIT_COMMIT",
+		"memory":400 ,
+        "memoryReservation":300,
+		"cpu":200 ,
+		"essential": true,
+    "logConfiguration": {
+        "logDriver": "awslogs",
+        "options": {
+          "awslogs-group": "GROUP_NAME",
+          "awslogs-region": "us-east-1",
+          "awslogs-stream-prefix": "chat-services"
+        }
+      },
+		"portMappings": [
+		  {
+			"containerPort": 8000,
+			"hostPort": 8013,
+			"protocol": "tcp"
+		  }
+		]
+	  }
+	],
+    "networkMode": "bridge",
+	"family": "chat-services",
+	"taskRoleArn": "arn:aws:iam::634677623658:role/ecsanywhererole-1"
+  }

@@ -1,0 +1,38 @@
+startBuild()
+{
+ECR_REPO=634677623658.dkr.ecr.us-east-1.amazonaws.com/chat-services
+DOCKER_BUILD_TAG=$GIT_BRANCH-${BUILD_NUMBER}
+docker build -t $ECR_REPO:$DOCKER_BUILD_TAG --pull=true .
+if [ $? -eq 0 ]; then
+echo "Docker build got success"
+else
+echo "Docker build was failed"
+exit 1
+fi
+docker images -q $ECR_REPO
+GET_LOGIN=$(aws ecr get-login --no-include-email --region us-east-1)
+IMAGE_ID=$(docker images -q $ECR_REPO | awk "NR==1{print $1}")
+echo $IMAGE_ID
+docker tag $IMAGE_ID $ECR_REPO:latest
+docker inspect $IMAGE_ID
+echo $GET_LOGIN
+$GET_LOGIN
+docker push $ECR_REPO:$DOCKER_BUILD_TAG && docker push $ECR_REPO:latest
+if [ $? -eq 0 ]; then
+echo "Docker Push got success"
+docker logout
+else
+echo "Docker Push was failed"
+docker logout
+exit 1
+fi
+}
+if [ "$GIT_BRANCH" = "development" ];
+then
+startBuild
+elif [ "$GIT_BRANCH" = "master" ];
+then
+startBuild
+else
+echo "Skipping a build process because this branch is not permitted for build: ${GIT_BRANCH}"
+fi
