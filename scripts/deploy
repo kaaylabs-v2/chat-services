@@ -43,12 +43,12 @@ JSON_FILE="onprem-chat-services"
 startDeploy
 elif [ "$GIT_BRANCH" = "master" ]
 then
-SERVICE_NAME="prod-chat-services"
+SERVICE_NAME="dev-chat-services"
 IMAGE_VERSION="${GIT_BRANCH}-${BUILD_NUMBER}"
 TASK_FAMILY="chat-services"
 CLUSTER="onprem-kaaylabs"
 START_CMD="start"
-JSON_FILE="prod-chat-services"
+JSON_FILE="onprem-chat-services"
 startDeploy
 else
 echo "Skipping a deployment because this branch is not permitted for docker deployment: ${GIT_BRANCH}"
