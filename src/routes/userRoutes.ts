@@ -16,7 +16,8 @@ const userRoutes = (onlineUsers: []) => {
             return obj;
         }
         )
-        res.status(200).send({ data });
+        const result = data.sort((a: any, b:any) => a.online === true ? -1 : 1);
+        res.status(200).send({ data: result });
     });
 
     router.get('/:userId', async (req: Request, res: Response) => {

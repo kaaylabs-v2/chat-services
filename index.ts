@@ -45,6 +45,7 @@ connect((err: Error | null) => {
     console.log(`User ${userId} is online`);
     onlineUsers.push(userId);
     socket.join(userId);
+    io.emit('user-login', userId);
   });
 
   // Handle user logout or disconnect
@@ -53,6 +54,7 @@ connect((err: Error | null) => {
     if (deleteIndex > -1) {
       onlineUsers.splice(deleteIndex, 1);
     }
+    io.emit('user-logout', userId);
     console.log(`User ${userId} is offline`);
   });
 

@@ -8,7 +8,7 @@ const router: Router = Router();
 
 export const formatDate = (date: any) => {
   if (!date) return date;
-  return Moment.utc(date).format('D MMM YYYY');
+  return Moment.utc(date).format('D MMM YYYY MM:SS');
   // return Moment(date).format(i18n.getDateFormat('standard'));
 };
 
@@ -74,14 +74,13 @@ const messageRoutes = (io: SocketIOServer) => {
       }
   
       // Retrieve messages based on the conversationId
-      const messages = await MessageModel.find({ conversationId: conversation._id });
-      messages.map(m => {
+      const messages = await MessageModel.find({ conversationId: conversation._id }).lean();
+      const result = messages.map(m => {
         const obj = { ...m };
         obj.timestamp = formatDate(obj.timestamp);
-        console.log('from format', obj, formatDate(obj.timestamp));
         return obj;
       })
-      res.json({data : messages});
+      res.json({data : result});
     } catch (error) {
       console.error('Error fetching messages:', error);
       res.status(500).json({ data: 'Internal server error' });
