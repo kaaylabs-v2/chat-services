@@ -8,7 +8,7 @@
 		"image": "634677623658.dkr.ecr.us-east-1.amazonaws.com/chat-services:GIT_COMMIT",
 		"memory":400 ,
         "memoryReservation":300,
-		"cpu":500 ,
+		"cpu":200 ,
 		"essential": true,
     "logConfiguration": {
         "logDriver": "awslogs",
