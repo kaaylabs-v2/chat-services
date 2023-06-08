@@ -1,13 +1,14 @@
 import { Router, Request, Response } from 'express';
 import { Server as SocketIOServer } from 'socket.io';
 import { auth_url } from '../../config.json';
+import axios from 'axios';
 const router: Router = Router();
 
 const userRoutes = (onlineUsers: []) => {
     // Get all Users
     router.get('/', async (req: Request, res: Response) => {
-        const usersJSON = await fetch(`${auth_url}/all-users`);
-        const usersData = await usersJSON.json();
+        const usersJSON = await axios.get(`${auth_url}/all-users`);
+        const usersData: any = usersJSON.data;
         const data = usersData.data.map((u: any) => {
             const obj = { ...u };
             obj.userId = u.uid;

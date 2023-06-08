@@ -3,8 +3,14 @@ import { MessageModel } from '../models/message';
 import { ConversationModel } from '../models/conversation';
 import { Server as SocketIOServer } from 'socket.io';
 import { randomUUID } from 'crypto';
-
+import * as Moment from 'moment';
 const router: Router = Router();
+
+export const formatDate = (date: any) => {
+  if (!date) return date;
+  return Moment.utc(date).format('D MMM YYYY');
+  // return Moment(date).format(i18n.getDateFormat('standard'));
+};
 
 const messageRoutes = (io: SocketIOServer) => {
   // Create a new message
@@ -69,7 +75,12 @@ const messageRoutes = (io: SocketIOServer) => {
   
       // Retrieve messages based on the conversationId
       const messages = await MessageModel.find({ conversationId: conversation._id });
-  
+      messages.map(m => {
+        const obj = { ...m };
+        obj.timestamp = formatDate(obj.timestamp);
+        console.log('from format', obj, formatDate(obj.timestamp));
+        return obj;
+      })
       res.json({data : messages});
     } catch (error) {
       console.error('Error fetching messages:', error);
