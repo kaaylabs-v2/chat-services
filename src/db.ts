@@ -26,7 +26,7 @@ export const close = (): void => {
 */
 import mongoose, { ConnectOptions } from 'mongoose';
 
-const dbUri = 'mongodb://210.18.157.101:27017';
+const dbUri = 'mongodb://192.168.0.51:27017';
 
 const connect = (callback: (error: Error | null) => void) => {
   const options: ConnectOptions = {
@@ -36,6 +36,7 @@ const connect = (callback: (error: Error | null) => void) => {
     autoIndex: true,
     autoCreate: true
   };
+  //mongodb://root:password@210.18.157.101:27017/?authMechanism=DEFAULT
   mongoose.connect(dbUri, options, (error) => {
     if (error) {
       console.error('Failed to connect to MongoDB:', error);
