@@ -49,7 +49,7 @@ connect((err: Error | null) => {
   });
 
   // Handle user logout or disconnect
-  socket.on('logout', (userId: string) => {
+  socket.on('logout', ({ userId }) => {
     const deleteIndex = onlineUsers.indexOf(userId);
     if (deleteIndex > -1) {
       onlineUsers.splice(deleteIndex, 1);
