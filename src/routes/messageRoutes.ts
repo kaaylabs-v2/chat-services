@@ -51,7 +51,7 @@ const messageRoutes = (io: SocketIOServer) => {
           console.log('socket send', participant, savedMessage)
           io.to(participant).emit('message', savedMessage);
         });
-        res.status(201).json({ messageId: savedMessage._id });
+        res.status(201).json({ messageId: savedMessage._id, conversationId: savedMessage.conversationId });
       })
       .catch((err) => {
         console.error('Failed to create message:', err);
@@ -60,6 +60,7 @@ const messageRoutes = (io: SocketIOServer) => {
   });
 
   router.get('/user-messages/:userId1/:userId2', async (req: Request, res: Response) => {
+    console.log('from route user-messages', req.params)
     try {
       const userId1 = req.params.userId1;
       const userId2 = req.params.userId2;
@@ -68,13 +69,14 @@ const messageRoutes = (io: SocketIOServer) => {
       const conversation = await ConversationModel.findOne({
         participants: { $all: [userId1, userId2] },
       });
-  
+      console.log('from user-messages conversation', conversation)
       if (!conversation) {
         return res.status(200).json({ data: [] });
       }
   
       // Retrieve messages based on the conversationId
       const messages = await MessageModel.find({ conversationId: conversation._id }).lean();
+      console.log('from messages', messages);
       const result = messages.map(m => {
         const obj = { ...m };
         obj.timestamp = formatDate(obj.timestamp);
