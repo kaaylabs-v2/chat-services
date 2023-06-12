@@ -63,6 +63,15 @@ connect((err: Error | null) => {
       console.log(`Socket ${socket.id} joined room ${conversationId}`);
     });
 
+    socket.on('typing', (data) => {
+      io.to(data.sentUserId).emit('typing', data);
+      console.log(`${JSON.stringify(data)} typing`);
+    });
+
+    socket.on('stop typing', (data) => {
+      io.to(data.sentUserId).emit('stop typing', data);
+      console.log(`${JSON.stringify(data)} stopped typing`);
+    });
     // Handle disconnect event
     socket.on('disconnect', () => {
       console.log('Socket disconnected:', socket.id);

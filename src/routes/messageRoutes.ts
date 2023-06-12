@@ -8,7 +8,7 @@ const router: Router = Router();
 
 export const formatDate = (date: any) => {
   if (!date) return date;
-  return Moment.utc(date).format('D MMM YYYY MM:SS');
+  return Moment.utc(date).format('D-MMM-YYYY 24MM:SS');
   // return Moment(date).format(i18n.getDateFormat('standard'));
 };
 
@@ -76,7 +76,6 @@ const messageRoutes = (io: SocketIOServer) => {
   
       // Retrieve messages based on the conversationId
       const messages = await MessageModel.find({ conversationId: conversation._id }).lean();
-      console.log('from messages', messages);
       const result = messages.map(m => {
         const obj = { ...m };
         obj.timestamp = formatDate(obj.timestamp);
