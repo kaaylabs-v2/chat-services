@@ -26,11 +26,11 @@ export const close = (): void => {
 */
 import mongoose, { ConnectOptions } from 'mongoose';
 
-const dbUri = 'mongodb://192.168.0.51:27017';
+const dbUri = 'mongodb://44.201.117.103:27017';
 
 const connect = (callback: (error: Error | null) => void) => {
   const options: ConnectOptions = {
-    dbName: 'chat-app',
+    dbName: 'admin',
     user: 'root',
     pass: 'password',
     autoIndex: true,
@@ -53,8 +53,3 @@ const close = () => {
 };
 
 export { connect, close };
-
-
-
-
-

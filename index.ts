@@ -44,6 +44,7 @@ connect((err: Error | null) => {
   socket.on('login', ({ userId }) => {
     console.log(`User ${userId} is online`);
     onlineUsers.push(userId);
+    console.log(onlineUsers, "preaassjajjjjjj")
     socket.join(userId);
     io.emit('user-login', userId);
   });
